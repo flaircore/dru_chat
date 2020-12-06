@@ -1,0 +1,18 @@
+# https://youtu.be/9qIIjv17IgQ?t=2668
+chat_libs:
+  version: VERSION
+  css:
+    theme:
+      libs/css/chat.css: {}
+    component:
+      //stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css: {}
+  js:
+    libs/js/chat.js: {}
+
+form_libs:
+  version: VERSION
+  css:
+    theme:
+      libs/css/chat_form.css: {}
+  js:
+    libs/js/send_msg.js: {}

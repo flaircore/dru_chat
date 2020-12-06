@@ -1,0 +1,4 @@
+services:
+  dru_chat.server:
+    class: Drupal\dru_chat\Service\Server
+    arguments: []
