@@ -42,7 +42,26 @@ function dru_chat_theme() {
         'data' => NULL
       ],
       'render element' => 'children',
+      'template' => 'dru-chat-block',
+    ],
+
+    'dru_chat_messages' => [
+      'variables' => [
+        'data' => NULL
+      ],
+      #'render element' => 'children',
+      'template' => 'dru-chat-messages',
     ],
   ];
 }
 
+/**
+ * Implements hook_page_attachments().
+ */
+function dru_chat_page_attachments(array &$attachments){
+
+  $current_user = Drupal::currentUser()->id();
+
+  $attachments['#attached']['drupalSettings']['dru_chat']['user'] = $current_user;
+
+}

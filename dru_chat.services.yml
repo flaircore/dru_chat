@@ -2,3 +2,14 @@ services:
   dru_chat.server:
     class: Drupal\dru_chat\Service\Server
     arguments: []
+
+  dru_chat.messages:
+    class: Drupal\dru_chat\Service\Messages
+    arguments: []
+    calls:
+      - [setEntity, ['@entity_type.manager'] ]
+
+  dru_chat.set_chat_user:
+    class: Drupal\dru_chat\Service\ChatUserSubscriber
+    tags:
+      - {name: event_subscriber}

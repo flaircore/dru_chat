@@ -1,4 +1,3 @@
-# https://youtu.be/9qIIjv17IgQ?t=2668
 chat_libs:
   version: VERSION
   css:
@@ -7,7 +6,15 @@ chat_libs:
     component:
       //stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css: {}
   js:
-    libs/js/chat.js: {}
+    #//js.pusher.com/7.0/pusher.min.js: { type: external, minified: true,  attributes: { async: true }}
+    #libs/js/chat.js: {}
+    libs/js/test.js: {}
+    webpacked/build/main.bundle.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupalSettings
+    - core/drupal.ajax
 
 form_libs:
   version: VERSION
@@ -16,3 +23,6 @@ form_libs:
       libs/css/chat_form.css: {}
   js:
     libs/js/send_msg.js: {}
+    libs/js/load_chat_form.js: {}
+  dependencies:
+    - core/drupal.ajax

@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\dru_chat\Ajax\LoadMessagesCommand;
 
 class ChatForm extends FormBase {
 
@@ -36,16 +37,21 @@ class ChatForm extends FormBase {
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $to = NULL) {
+
+    //dump($this->getOnlineUsers());
+
 
     $form['messages'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="message-results" class="message-results"></div>',
+      '#markup' => '<div id="message-results" class="message-results">Loadind....</div>',
     ];
 
-    $form['users_online'] = [
-      '#type' => 'markup',
-      '#markup' => $this->getOnlineUsers(),
+    $form['message_to'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('To User'),
+      '#value' => $to,
+      '#required' => TRUE,
     ];
 
     $form['message_body'] = [
@@ -72,82 +78,41 @@ class ChatForm extends FormBase {
     ];
 
     $form['message'] = [
-      '#type' => 'textfield',
+      '#type' => 'textarea',
       '#title' => $this->t('Message'),
       '#required' => TRUE,
     ];
 
-    $form['reload'] = [
-      '#type' => 'actions',
-      '#attributes' => [
-        'class' => [ 'reload-form'],
-        'id' => [ 'reload-form-btn'],
-      ],
-      '#value' => $this->t('Reload'),
-      '#ajax' => [
-        'callback' => '::reloadMessage',
-        'disable-refocus' => FALSE,
-        //'event' => 'change',
-      ],
-    ];
 
-    $form['actions'] = [
+    $form['actions_manual'] = [
       '#type' => 'button',
-      '#value' => $this->t('Send'),
+      '#value' => $this->t('Input Manually'),
       '#ajax' => [
         'callback' => '::sendMessage',
-        'disable-refocus' => FALSE,
-        //'event' => 'change',
       ],
     ];
 
-    $form['#attached']['library'][] = 'dru_chat/form_libs';
+
+    //$form['#attached']['library'][] = 'dru_chat/form_libs';
 
     return $form;
   }
 
 
-  public function sendMessage(array &$form, FormStateInterface $form_state){
-
-    $message = $form_state->getValue('message');
-    $from = 25;
-    $to = [28, 33];
-
-    $message = Json::encode([$message, $from, $to]);
+  public function sendMessage(){
 
     $response = new AjaxResponse();
 
     $response->addCommand(
       new HtmlCommand(
         '.message-results',
-        '<div class="message-list">'.$this->t($form_state->getValue('message')).'</div>'
-      )
-    );
-
-    $response->addCommand(
-      new InvokeCommand(
-        NULL,
-        'on_chat',
-        [$message]
+        '<div class="message-list">NEWEST CHAT MESSAEGE NOW..................................................... </div>'
       )
     );
 
     return $response;
   }
 
-  public function reloadMessages(array &$form, FormStateInterface $form_state){
-
-    $response = new AjaxResponse();
-
-    $response->addCommand(
-      new HtmlCommand(
-        '#message-body',
-        '<div class="chat-content">'.$this->t('Reaload the messages for more!!!!').'</div>'
-      )
-    );
-
-    return $response;
-  }
 
   /**
    * Form submission handler.
@@ -162,6 +127,7 @@ class ChatForm extends FormBase {
   }
 
 
+  /*
   protected function getOnlineUsers(){
     // Do better later
     $users = \Drupal::entityTypeManager()->getStorage('user');
@@ -174,9 +140,10 @@ class ChatForm extends FormBase {
 
     $markup = '
     <div id="online-users"><h3>Online Users</h3>
+    <div id="ajax-target">Ajax goes here!!!</div>
         <ul id="users-list">';
 
-    /** @var \Drupal\user\Entity\User $user */
+    //@var \Drupal\user\Entity\User $user
     foreach ($users as $user) {
       $name = $user->getDisplayName();
       $uuid = $user->uuid();
@@ -193,4 +160,6 @@ class ChatForm extends FormBase {
 
     return $markup;
   }
+
+  */
 }

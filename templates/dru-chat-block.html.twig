@@ -9,37 +9,45 @@
 */
 #}
 
-<div>
-    {{ data['title'] }}
-    {{ data['chat'] }}
-    <div class="container">
-        <div class="row">
-            <div class="col-12 mt-5 pt-3 pb-3 bg-white from-wrapper">
-                <div class="container">
-                    <h3>Chat</h3>
-                    <hr>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-4 mb-3">
-                            <ul id="user-list" class="list-group"></ul>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-8">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="message-holder">
-                                        <div id="messages" class="row"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea id="message-input" class="form-control" name="" rows="2"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button id="send" class="btn float-right  btn-primary">Send</button>
-                                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="user-wrapper">
+                <ul class="users">
+
+                    {%  for user in data['users'] %}
+                    <li class="user" id="{{ user.id }}">
+
+                        {% for unread in data['unread_messages'] if unread['from'] == user.id %}
+                            <span class="pending">{{ unread['message_count'] }}</span>
+                        {% endfor %}
+
+                        <div class="media">
+                            <div class="media-left">
+                                {#<img src="{{ user.avatar }}" alt="" class="media-object">#}
+                                {#{ dump(user.user_picture.value.target_id ) }#}
+                                <img src={{ file_url(user.user_picture.entity.fileuri)  }} alt="" class="media-object">
+                            </div>
+
+                            <div class="media-body">
+                                {#
+                                <p class="name">{{ user.name }}</p>
+                                <p class="email">{{ user.email }}</p>
+                                #}
+                                <p class="name">{{ user.displayname }}</p>
+                                <p class="email">{{ user.email }}</p>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                    {% endfor %}
+
+                </ul>
             </div>
+        </div>
+
+        <div class="col-md-8" id="messages">
+
+
         </div>
     </div>
 </div>

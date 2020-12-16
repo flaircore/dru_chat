@@ -4,3 +4,19 @@
   padding: 10px;
   background: #36c168;
 }
+
+#online-users {
+  background: #0a65aa;
+}
+#online-users ul {
+  list-style: none;
+}
+
+#online-users ul li {
+  cursor: pointer;
+  background: #00bcd4;
+  border: 1px solid grey;
+  width: 100px;
+}
+
+

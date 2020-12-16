@@ -15,3 +15,26 @@ dru_chat.test_form:
     _title: 'Chat form'
   requirements:
     _permission: 'access content'
+
+dru_chat.messages:
+  path: '/dru-chat/messages/{user}'
+  defaults:
+    _controller: '\Drupal\dru_chat\Controller\MessagesController::getMessages'
+    _title: 'user message'
+  requirements:
+    #_csrf_token: 'TRUE'
+    _permission: 'access content'
+  options:
+    parameters:
+      user:
+        type: entity:user
+
+
+dru_chat.new_messages:
+  path: '/dru-chat/new-message'
+  defaults:
+    _controller: '\Drupal\dru_chat\Controller\MessagesController::newMessage'
+    _title: 'New message'
+  requirements:
+    #_csrf_token: 'TRUE'
+    _permission: 'access content'

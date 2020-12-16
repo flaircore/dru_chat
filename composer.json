@@ -8,6 +8,9 @@
     "minimum-stability": "dev",
     "support": {
         "issues": "https://www.drupal.org/project/issues/dru_chat",
-        "source": "http://cgit.drupalcode.org/dru_chat",
+        "source": "http://cgit.drupalcode.org/dru_chat"
     },
+    "require": {
+        "pusher/pusher-php-server": "^4.0"
+    }
 }
