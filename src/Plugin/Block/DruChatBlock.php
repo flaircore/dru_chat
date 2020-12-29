@@ -3,6 +3,7 @@
 namespace Drupal\dru_chat\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\dru_chat\Service\Messages;
@@ -23,9 +24,15 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
    */
   private $messages;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Messages $messages) {
+  /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Messages $messages, ConfigFactoryInterface $configFactory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->messages = $messages;
+    $this->configFactory = $configFactory;
   }
 
   /**
@@ -48,7 +55,8 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('dru_chat.messages')
+      $container->get('dru_chat.messages'),
+      $container->get('config.factory')
     );
   }
 
@@ -72,7 +80,14 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
     //dump($messages);
 
     $user = \Drupal::currentUser();
+    $config = $this->configFactory->getEditable('dru_chat.settings');
+    $cluster = $config->get('cluster');
+    $app_id = $config->get('app_id');
 
+    $token = \Drupal::csrfToken();
+
+    dump($cluster);
+    dump($app_id);
     //dump($user);
 
     // do better here... users online and such

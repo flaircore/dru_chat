@@ -16,6 +16,14 @@ dru_chat.test_form:
   requirements:
     _permission: 'access content'
 
+dru_chat.pusher_settings:
+  path: 'admin/dru-chat/pusher-configs'
+  defaults:
+    _form: '\Drupal\dru_chat\Form\PusherConfigForm'
+    _title: 'Pusher Config form'
+  requirements:
+    _permission: 'access content'
+
 dru_chat.messages:
   path: '/dru-chat/messages/{user}'
   defaults:
