@@ -35,7 +35,12 @@
     var channel = pusher.subscribe('my-channel')
 
     channel.bind('dru-chat-event', function(data) {
-      console.log(data)
+      let pending = document.querySelector(`[id="${data.from}"]`)
+      console.log(data, current_id, data.from, data.to, pending)
+      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
+      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
+      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
+      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist  **************************')
 
       if (current_id === data.from) {
         alert('sender is ME')

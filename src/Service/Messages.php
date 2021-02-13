@@ -56,8 +56,8 @@ class Messages {
       #->accessCheck(FALSE)
         ->condition('from', $users, 'IN')
         ->condition('to', $users, 'IN')
-      #->sort('id','ASC')
-      ->sort('id','DESC')
+      ->sort('id','ASC')
+      #->sort('id','DESC')
       ->pager(30)
       ->execute();
     return $entity->loadMultiple($data);
