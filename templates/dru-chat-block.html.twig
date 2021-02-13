@@ -10,44 +10,89 @@
 #}
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="user-wrapper">
-                <ul class="users">
+    <h1>{{ data['pusher_cluster'] }}</h1>
+    <h1>{{ data['pusher_app_key'] }}</h1>
+    <div id="dru-chat-block">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="user-wrapper">
+                    <ul class="users">
 
-                    {%  for user in data['users'] %}
-                    <li class="user" id="{{ user.id }}">
+                        {%  for user in data['users'] %}
+                            <li class="user" id="{{ user.id }}">
 
-                        {% for unread in data['unread_messages'] if unread['from'] == user.id %}
-                            <span class="pending">{{ unread['message_count'] }}</span>
+                                {% for unread in data['unread_messages'] if unread['from'] == user.id %}
+                                    <span class="pending">{{ unread['message_count'] }}</span>
+                                {% endfor %}
+
+                                <div class="media">
+                                    <div class="media-left">
+                                        {#<img src="{{ user.avatar }}" alt="" class="media-object">#}
+                                        {#{ dump(user.user_picture.value.target_id ) }#}
+                                        <img src="{{ file_url(user.user_picture.entity.fileuri)  }}" alt="" class="media-object">
+                                    </div>
+
+                                    <div class="media-body">
+                                        {#
+                                        <p class="name">{{ user.name }}</p>
+                                        <p class="email">{{ user.email }}</p>
+                                        #}
+                                        <p class="name">{{ user.displayname }}</p>
+                                        <p class="email">{{ user.email }}</p>
+                                    </div>
+                                </div>
+                            </li>
                         {% endfor %}
 
-                        <div class="media">
-                            <div class="media-left">
-                                {#<img src="{{ user.avatar }}" alt="" class="media-object">#}
-                                {#{ dump(user.user_picture.value.target_id ) }#}
-                                <img src={{ file_url(user.user_picture.entity.fileuri)  }} alt="" class="media-object">
-                            </div>
+                    </ul>
+                </div>
+            </div>
 
-                            <div class="media-body">
-                                {#
-                                <p class="name">{{ user.name }}</p>
-                                <p class="email">{{ user.email }}</p>
-                                #}
-                                <p class="name">{{ user.displayname }}</p>
-                                <p class="email">{{ user.email }}</p>
-                            </div>
-                        </div>
-                    </li>
-                    {% endfor %}
+            <div class="col-md-8" id="messages">
 
-                </ul>
+
             </div>
         </div>
-
-        <div class="col-md-8" id="messages">
-
-
-        </div>
     </div>
+
 </div>
+<!-- https://youtu.be/cPGhs94Rj5E?t=3807 -->
+
+<script>
+  /**
+   * else {
+          // if receiver not selected, add unread notification for that user
+          let pending = document.querySelector(`[id="${data.from}"]`)
+            .querySelector('.pending')
+          if (pending && pending.innerHTML) {
+            document.querySelector(`[id="${data.from}"]`)
+              .querySelector('.pending').innerHTML(pending.innerText + 1)
+          } else {
+            document.querySelector(`[id="${data.from}"]`).append('<span class="pending">1</span>')
+          }
+   */
+
+  /*let pending = document.querySelector(`[id="3"]`)
+
+  console.log('***************** DEBUG JS ****************************')
+  console.log('***************** DEBUG JS ****************************')
+  console.log('***************** DEBUG JS ****************************')
+  console.log(pending)
+  if (pending.querySelector('.pending') && pending.querySelector('.pending').innerText) {
+    pending.innerText = 20
+
+    console.log(pending.innerHTML)
+    console.log(pending.innerText)
+  } else {
+    const item = document.createElement('span')
+    item.classList.add('pending')
+    item.innerText = 10
+    pending.prepend(item)
+  }
+  console.log('***************** DEBUG JS ****************************')
+  console.log('***************** DEBUG JS ****************************')
+  console.log('***************** DEBUG JS ****************************')*/
+
+</script>
+
+{{  attach_library('dru_chat/pusher_chat') }}

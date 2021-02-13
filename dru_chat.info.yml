@@ -2,4 +2,7 @@ name: 'Dru Chat'
 type: module
 description: 'Live, realtime chat for drupal'
 core: 8.x
-package: 'Chat'
+
+core_version_requirement: ^8 || ^9
+
+package: 'Messaging'

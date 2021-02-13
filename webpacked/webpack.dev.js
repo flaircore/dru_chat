@@ -1,27 +1,20 @@
 const path = require('path')
 const common = require('./webpack.common')
 const { merge } = require('webpack-merge')
+const  MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = merge(common,{
     mode: 'development',
-    output: {
-        filename: "[name].bundle.js",
-        path: path.resolve(__dirname, 'build')
-    },
+    //devtool: 'cheap-module-eval-source-map',
+  devtool: 'inline-source-map',
+  watch: true,
 
-    module: {
-        rules: [
-            {
-                test: /\.scss$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ],
-            },
-        ]
-    },
+  watchOptions: {
+    ignored: 'node_modules/**'
+  },
 
-    devtool: 'cheap-module-eval-source-map'
+  plugins: [
+    new MiniCssExtractPlugin({ filename: '[name].css'})
+  ]
 
 })

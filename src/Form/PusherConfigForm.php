@@ -74,6 +74,15 @@ class PusherConfigForm extends ConfigFormBase {
       '#maxlenght' => 40
     ];
 
+    $form['chat_settings'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Visitors Chat settings'),
+      '#options' => ['yes' => 'Yes', 'no' => 'No'],
+      '#description' => $this->t('Should un-logged in users use chat!?'),
+      '#default_value' => $config->get('chat_settings'),
+      '#required' => TRUE,
+    ];
+
 
     return parent::buildForm($form, $form_state);
   }
@@ -85,9 +94,10 @@ class PusherConfigForm extends ConfigFormBase {
       ->set('auth_key', $form_state->getValue('auth_key'))
       ->set('secret', $form_state->getValue('secret'))
       ->set('cluster', $form_state->getValue('cluster'))
+      ->set('chat_settings', $form_state->getValue('chat_settings'))
       ->save();
 
-    drupal_flush_all_caches();
+    //drupal_flush_all_caches();
     parent::submitForm($form, $form_state);
   }
 }

@@ -8,6 +8,7 @@ services:
     arguments: []
     calls:
       - [setEntity, ['@entity_type.manager'] ]
+      - [setConfig, ['@config.factory'] ]
 
   dru_chat.set_chat_user:
     class: Drupal\dru_chat\Service\ChatUserSubscriber

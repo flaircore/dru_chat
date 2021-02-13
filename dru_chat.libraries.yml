@@ -5,16 +5,16 @@ chat_libs:
       libs/css/chat.css: {}
     component:
       //stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css: {}
-  js:
+  #js:
     #//js.pusher.com/7.0/pusher.min.js: { type: external, minified: true,  attributes: { async: true }}
     #libs/js/chat.js: {}
-    libs/js/test.js: {}
-    webpacked/build/main.bundle.js: {}
-  dependencies:
-    - core/jquery
-    - core/jquery.once
-    - core/drupalSettings
-    - core/drupal.ajax
+    #libs/js/test.js: {}
+    #webpacked/build/main.bundle.js: {}
+  #dependencies:
+   # - core/jquery
+   # - core/jquery.once
+    #- core/drupalSettings
+    #- core/drupal.ajax
 
 form_libs:
   version: VERSION
@@ -26,3 +26,11 @@ form_libs:
     libs/js/load_chat_form.js: {}
   dependencies:
     - core/drupal.ajax
+
+pusher_chat:
+  js:
+    webpacked/build/chat.bundle.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupalSettings

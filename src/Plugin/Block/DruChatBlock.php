@@ -65,6 +65,8 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
    */
   public function build() {
 
+    // TODO:: custom fallback for all users not logged in
+
     /*$form_state = new FormState();
     $form_state->setRebuild();
 
@@ -73,9 +75,9 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
 
     return $form; */
 
-    //$messages = $this->messages->getMessages();
+    //$messages = $this->messages->generateFakeData();
 
-    // $this->messages->generateFakeData();
+    //$this->messages->generateFakeData();
 
     //dump($messages);
 
@@ -83,12 +85,21 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
     $config = $this->configFactory->getEditable('dru_chat.settings');
     $cluster = $config->get('cluster');
     $app_id = $config->get('app_id');
+    $secret = $config->get('secret');
+    $auth_key = $config->get('auth_key');
+    /**
+     * ->set('app_id', $form_state->getValue('app_id'))
+    ->set('auth_key', $form_state->getValue('auth_key'))
+    ->set('secret', $form_state->getValue('secret'))
+    ->set('cluster', $form_state->getValue('cluster'))
+     */
 
     $token = \Drupal::csrfToken();
 
-    dump($cluster);
+    /*dump($cluster);
     dump($app_id);
-    //dump($user);
+    dump($secret, $auth_key);
+    */
 
     // do better here... users online and such
     $users = \Drupal::entityTypeManager()->getStorage('user');
@@ -104,22 +115,28 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
 
     $users = $users->loadMultiple($user_ids);
 
-
-
-    #dump($users);
     return [
       '#theme' => 'dru_chat_block',
       '#cache' => ['max-age' => 0],
       '#data' => [
         'title' => 'Testing title',
-        'chat' => 'Chatijng',
+        'pusher_cluster' => $cluster,
+        'pusher_app_key' => $auth_key,
         'users' => $users,
+        'current_id' => $user->id(), // TODO:: token for guests
         'unread_messages' => $unread_messages,
       ],
       '#attached' => [
         'library' => [
           'dru_chat/chat_libs',
         ],
+        'drupalSettings' =>[
+          'dru_chat' => [
+            'current_id' => $user->id(),
+            'pusher_cluster' => $cluster,
+            'pusher_app_key' => $auth_key,
+          ]
+        ]
       ],
     ];
   }

@@ -3,6 +3,7 @@
 
 namespace Drupal\dru_chat\Service;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Faker\Factory;
 use Faker\Generator;
@@ -13,16 +14,25 @@ class Messages {
   /** @var  \Drupal\Core\Entity\EntityTypeManagerInterface */
   protected $entityTypeManager;
 
+  /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
   public function setEntity(EntityTypeManagerInterface $entityTypeManager){
     $this->entityTypeManager = $entityTypeManager;
+  }
+
+  public function setConfig(ConfigFactoryInterface $configFactory){
+    $this->configFactory = $configFactory;
   }
 
   public function getMessages($user_id){
 
     /** @var \Drupal\Core\Session\AccountProxy $current_user */
     $current_user = \Drupal::currentUser();
-    //dump($current_user->id());
-    //dump($user_id);
+
+    // TODO for guests
 
     $users = [$current_user->id(), $user_id];
 
@@ -46,7 +56,8 @@ class Messages {
       #->accessCheck(FALSE)
         ->condition('from', $users, 'IN')
         ->condition('to', $users, 'IN')
-      ->sort('id','ASC')
+      #->sort('id','ASC')
+      ->sort('id','DESC')
       ->pager(30)
       ->execute();
     return $entity->loadMultiple($data);
@@ -73,16 +84,22 @@ class Messages {
 
     $entity->create($values)->save();
 
+    $config = $this->configFactory->getEditable('dru_chat.settings');
+    $cluster = $config->get('cluster');
+    $app_id = $config->get('app_id');
+    $secret = $config->get('secret');
+    $auth_key = $config->get('auth_key');
+
     // Send to pusher
 
     $options = array(
-      'cluster' => 'ap2',
+      'cluster' => $cluster,
       'useTLS' => true
     );
     $pusher = new Pusher(
-      'load from config_form',
-      'load from config_form',
-      'load from config_form',
+      $auth_key,
+      $secret,
+      $app_id,
       $options
     );
 
