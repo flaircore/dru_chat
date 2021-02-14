@@ -1,21 +1,3 @@
-#https://blog.samuel.ninja/the-tutorial-for-php-websockets-that-i-wish-had-existed/#makingthewebsocketpersistentonyourserver
-dru_chat.server_controller_hello:
-  path: '/dru_chat/server_init'
-  defaults:
-    _controller: '\Drupal\dru_chat\Controller\ServerController::serverInit'
-    _title: 'Server Init'
-  requirements:
-    _permission: 'access content'
-
-
-dru_chat.test_form:
-  path: '/dru_chat/test_form'
-  defaults:
-    _form: '\Drupal\dru_chat\Form\ChatForm'
-    _title: 'Chat form'
-  requirements:
-    _permission: 'access content'
-
 dru_chat.pusher_settings:
   path: 'admin/dru-chat/pusher-configs'
   defaults:

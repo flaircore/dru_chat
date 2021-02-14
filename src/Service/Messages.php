@@ -43,6 +43,7 @@ class Messages {
       ->condition('to', $current_user->id())
       ->execute();
 
+    // TODO:: optimize in one query if possible
     // return messages which are from current_user->id()
     // and to = $user_id, OR from = $user_id and to = $current_user->id()
     $entity = $this->entityTypeManager->getStorage('dru_chat_messages');
@@ -56,11 +57,14 @@ class Messages {
       #->accessCheck(FALSE)
         ->condition('from', $users, 'IN')
         ->condition('to', $users, 'IN')
-      ->sort('id','ASC')
+      #->sort('id','ASC')
+      ->sort('created' , 'DESC')
+      #->orderBy('id', 'ASC')
+      #->sort('id','ASC')
       #->sort('id','DESC')
       ->pager(30)
       ->execute();
-    return $entity->loadMultiple($data);
+    return $entity->loadMultiple(array_reverse($data));
 
 
 

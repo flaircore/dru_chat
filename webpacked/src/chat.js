@@ -35,15 +35,18 @@
     var channel = pusher.subscribe('my-channel')
 
     channel.bind('dru-chat-event', function(data) {
+      current_id = drupalSettings.dru_chat.current_id
       let pending = document.querySelector(`[id="${data.from}"]`)
       console.log(data, current_id, data.from, data.to, pending)
+      console.log(data.to === current_id)
       console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
       console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
       console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
       console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist  **************************')
 
       if (current_id === data.from) {
-        alert('sender is ME')
+        //alert('sender is ME')
+        // TODO:: attach new message here
       } else if (current_id === data.to) {
         // update my view
         if (receiver_id === data.from) {
@@ -51,10 +54,10 @@
           // if receiver is selected reload the selected user..
         } else {
           // if receiver not selected, add unread notification for that user
-          // debug from here
+
           let pending = document.querySelector(`[id="${data.from}"]`)
           if (pending.querySelector('.pending') && pending.querySelector('.pending').innerText) {
-            pending.querySelector('.pending').innerText = pending.querySelector('.pending').innerText + 1
+            pending.querySelector('.pending').innerText = parseInt(pending.querySelector('.pending').innerText) + 1
           } else {
             const item = document.createElement('span')
             item.classList.add('pending')
@@ -62,14 +65,13 @@
             pending.prepend(item)
           }
         }
-        //alert('you nave a new massage')
       }
 
     })
 
 
     function sendNewMessage(e) {
-      console.log(this)
+      //console.log(this)
 
       var msg = this.value
       // check if enter key is pressed and message and recever id not null
@@ -79,13 +81,14 @@
         this.value = ''
         var params = 'receiver_id=' + receiver_id + '&message=' + msg
         //xhr.send(params)
+        //alert(params)
+
 
         const url = 'http://localhost/dru_push/web/dru-chat/new-message'
-
         xhr.open('POST', url, true)
-
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
         xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0")
+
         // TODO:: set up form csrf token
 
         xhr.onprogress = function () {
@@ -98,13 +101,7 @@
             // 403: forbidden
             // 404: Not found
 
-            console.log(this.responseText)
-            console.log('New messahe div ++++++++++++++++++')
-            console.log('New messahe div ++++++++++++++++++')
-            console.log('New messahe div ++++++++++++++++++')
-            console.log('New messahe div ++++++++++++++++++')
-            console.log('New messahe div ++++++++++++++++++')
-            console.log('New messahe div ++++++++++++++++++')
+            //console.log(this.responseText)
 
             //const users = JSON.parse(this.responseText)
             /*var output = ''
@@ -120,6 +117,7 @@
             message.addEventListener('keyup', sendNewMessage) */
             /*document.getElementById('msg').innerHTML =
                 this.responseText*/
+            scrollMessageList()
           }
         }
 
@@ -143,8 +141,8 @@
       const url = 'http://localhost/dru_push/web/dru-chat/messages/' + receiver_id
 
       xhr.open('GET', url, true)
-      //xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
       xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0")
+      //xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
       //var params = "name="+name;
       // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
 
@@ -165,12 +163,13 @@
               '<li> ID: '
               +
               '</ul>'
-          console.log(this.responseText)
+          //console.log(this.responseText)
           messages.innerHTML = this.responseText
 
           // listener for message input
           const message = document.querySelector('[type="input"], [name="message"]')
           message.addEventListener('keyup', sendNewMessage)
+          scrollMessageList()
           /*document.getElementById('msg').innerHTML =
               this.responseText*/
         }
@@ -191,4 +190,22 @@
   $(document).ready(function () {
     druChatInit()
   })
+
+  // scroll message list
+  function scrollMessageList(){
+    const msgList = document.querySelector('.message-wrapper')
+    /*var y = msgList.scrollHeight;
+    var x = msgList.scrollWidth;
+    console.log('************** DID YOU CALL ME **********************')
+    console.log('************** DID YOU CALL ME **********************')
+    console.log('************** DID YOU CALL ME **********************')
+    console.log('************** DID YOU CALL ME **********************')
+    console.log(msgList)
+    console.log(x)
+    console.log(y)
+    console.log(msgList.animate({scroll}))*/
+    $('.message-wrapper').animate({
+      scrollTop: msgList.scrollHeight
+    }, 50)
+  }
 })(jQuery, Drupal, drupalSettings)
