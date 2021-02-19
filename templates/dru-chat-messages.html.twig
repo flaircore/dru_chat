@@ -8,7 +8,9 @@
                 <div class={{ message.from.value.0.target_id == user.id ? 'sent' : 'received' }}>
                     <p>{{ message.message.value }} </p>
                     <p class="date">{{ message.created.value|date('d M y, h:i a') }}</p>
+                  {% if message.from.value.0.target_id == user.id %}
                     <div class={{ message.is_read.value ? 'read' : 'unread' }}></div>
+                  {% endif %}
 
                 </div>
             </li>

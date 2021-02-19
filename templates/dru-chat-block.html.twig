@@ -9,104 +9,86 @@
 */
 #}
 
-<div class="container-fluid">
-    <h1>{{ data['pusher_cluster'] }}</h1>
-    <h1>{{ data['pusher_app_key'] }}</h1>
-    <div id="dru-chat-block">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="user-wrapper">
-                    <ul class="users">
+<section id="chat_block">
+  <div class="chat-controls">
+    <div class="info">Unread messages.</div>
+    <div class="notifications">
+      <span class="total">{{ data['total_unread'] }}</span>
+    </div>
+    <div class="chat-state closed"></div>
+  </div>
+  <div id="dru-chat-block">
+    <div class="message-list" id="messages">
 
-                        {%  for user in data['users'] %}
-                            <li class="user" id="{{ user.id }}">
 
-                                {% for unread in data['unread_messages'] if unread['from'] == user.id %}
-                                    <span class="pending">{{ unread['message_count'] }}</span>
-                                {% endfor %}
+    </div>
+    <div class="user-list">
+      <div class="user-wrapper">
+        <ul class="users">
 
-                                <div class="media">
-                                    <div class="media-left">
-                                        {#<img src="{{ user.avatar }}" alt="" class="media-object">#}
-                                        {#{ dump(user.user_picture.value.target_id ) }#}
-                                        <img src="{{ file_url(user.user_picture.entity.fileuri)  }}" alt="" class="media-object">
-                                    </div>
+          {%  for user in data['users'] %}
+            <li class="user" id="{{ user.id }}">
 
-                                    <div class="media-body">
-                                        {#
-                                        <p class="name">{{ user.name }}</p>
-                                        <p class="email">{{ user.email }}</p>
-                                        #}
-                                        <p class="name">{{ user.displayname }}</p>
-                                        <p class="email">{{ user.email }}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
+              {% for unread in data['unread_messages'] if unread['from'] == user.id %}
+                <span class="pending">{{ unread['message_count'] }}</span>
+              {% endfor %}
 
-                    </ul>
+              <div class="media">
+                <div class="media-left">
+                  {#<img src="{{ user.avatar }}" alt="" class="media-object">#}
+                  {#{ dump(user.user_picture.value.target_id ) }#}
+                  <img src="{{ file_url(user.user_picture.entity.fileuri)  }}" alt="" class="media-object">
                 </div>
-            </div>
 
-            <div class="col-md-8" id="messages">
+                <div class="media-body">
+                  <p class="name">{{ user.displayname }}</p>
+                </div>
+              </div>
+            </li>
+          {% endfor %}
 
-
-            </div>
-        </div>
+        </ul>
+      </div>
     </div>
 
-</div>
+  </div>
+</section>
 
 <script>
-  /**
-   * else {
-          // if receiver not selected, add unread notification for that user
-          let pending = document.querySelector(`[id="${data.from}"]`)
-            .querySelector('.pending')
-          if (pending && pending.innerHTML) {
-            document.querySelector(`[id="${data.from}"]`)
-              .querySelector('.pending').innerHTML(pending.innerText + 1)
-          } else {
-            document.querySelector(`[id="${data.from}"]`).append('<span class="pending">1</span>')
-          }
-   */
+  const notifications = document.querySelector('.chat-controls .notifications')
+  const chat_view = document.querySelector('.chat-controls .chat-state')
+  const chat_controls = document.querySelector('#chat_block .chat-controls')
+  const chat_block_view = document.querySelector('#chat_block #dru-chat-block')
+  const user_list = document.querySelector('#dru-chat-block .user-list')
+  const notification_info = document.querySelector('.chat-controls')
 
-  /*let pending = document.querySelector(`[id="5"]`)
+  function toggleChatView(){
+    console.log(chat_view.classList)
+    // if for minimize view or maximize
+    if (chat_view.classList.contains('chat-state')){
+      /*if (chat_view.classList.contains('opened')) {
+        // view is now closed, show unread help text
+        const msg = document.createElement('div')
+        msg.classList.add('info')
+        msg.innerText = `Unread messages.`
+        chat_controls.prepend(msg)
+      }*/
+      chat_view.classList.toggle('closed')
+      chat_view.classList.toggle('opened')
+      chat_controls.classList.toggle('opened')
+      // TODO:: control others from master div and remove these
+      chat_block_view.classList.toggle('open-view')
+    }
+  }
 
-  console.log('***************** DEBUG JS ****************************')
-  console.log('***************** DEBUG JS ****************************')
-  console.log('***************** DEBUG JS ****************************')
-  console.log(pending)
-  console.log(pending.querySelector('.pending'))
-  console.log(pending.querySelector('.pending').innerText)*/
-  /*if (pending.querySelector('.pending') && pending.querySelector('.pending').innerText) {
-    pending.innerText = 20
+  function notificationToolTip(){
 
-    console.log(pending.innerHTML)
-    console.log(pending.innerText)
-  } else {
-    const item = document.createElement('span')
-    item.classList.add('pending')
-    item.innerText = 10
-    pending.prepend(item)
-  }*/
+  }
 
-  /**
-   * let pending = document.querySelector(`[id="${data.from}"]`)
-   if (pending.querySelector('.pending') && pending.querySelector('.pending').innerText) {
-            pending.querySelector('.pending').innerText = pending.querySelector('.pending').innerText + 1
-          } else {
-            const item = document.createElement('span')
-            item.classList.add('pending')
-            item.innerText = 1
-            pending.prepend(item)
-          }
-   */
-  /*console.log('***************** DEBUG JS ****************************')
-  console.log('***************** DEBUG JS ****************************')
-  console.log('***************** DEBUG JS ****************************')
-  pending.querySelector('.pending').innerText = 5+5*/
 
+
+  chat_controls.addEventListener('click', toggleChatView)
+  notifications.addEventListener('mouseover', notificationToolTip)
 </script>
 
 {{  attach_library('dru_chat/pusher_chat') }}

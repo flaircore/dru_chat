@@ -9,11 +9,7 @@ import Pusher from 'pusher-js';
   var receiver_id = '';
   var my_id = drupalSettings.dru_chat.user;// load from request instead
 
-  console.log('CHAT JS JS JSJ');
-  console.log('CHAT JS JS JSJ');
-  console.log(my_id);
-  console.log('CHAT JS JS JSJ');
-  console.log('CHAT JS JS JSJ');
+
 
   // https://stackoverflow.com/questions/34782493/difference-between-csrf-and-x-csrf-token
 

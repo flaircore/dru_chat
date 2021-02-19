@@ -2,9 +2,7 @@ chat_libs:
   version: VERSION
   css:
     theme:
-      libs/css/chat.css: {}
-    component:
-      //stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css: {}
+      libs/un_processed/test_chat.css: {}
   #js:
     #//js.pusher.com/7.0/pusher.min.js: { type: external, minified: true,  attributes: { async: true }}
     #libs/js/chat.js: {}
@@ -29,7 +27,7 @@ form_libs:
 
 pusher_chat:
   js:
-    webpacked/build/chat.bundle.js: {}
+    libs/processed/chat.js: {}
   dependencies:
     - core/jquery
     - core/jquery.once

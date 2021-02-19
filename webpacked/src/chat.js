@@ -1,3 +1,4 @@
+
 (function ($, Drupal, drupalSettings) {
   const Pusher = require('pusher-js')
 
@@ -36,17 +37,8 @@
 
     channel.bind('dru-chat-event', function(data) {
       current_id = drupalSettings.dru_chat.current_id
-      let pending = document.querySelector(`[id="${data.from}"]`)
-      console.log(data, current_id, data.from, data.to, pending)
-      console.log(data.to === current_id)
-      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
-      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
-      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist **************************')
-      console.log('********************* YOU HAVE BEEN DEBUGGED, dont resist  **************************')
-
       if (current_id === data.from) {
-        //alert('sender is ME')
-        // TODO:: attach new message here
+        document.querySelector(`[id="${data.to}"]`).click()
       } else if (current_id === data.to) {
         // update my view
         if (receiver_id === data.from) {
@@ -56,6 +48,9 @@
           // if receiver not selected, add unread notification for that user
 
           let pending = document.querySelector(`[id="${data.from}"]`)
+
+          // update total unread if this user is not active state TODO also
+
           if (pending.querySelector('.pending') && pending.querySelector('.pending').innerText) {
             pending.querySelector('.pending').innerText = parseInt(pending.querySelector('.pending').innerText) + 1
           } else {
@@ -84,7 +79,7 @@
         //alert(params)
 
 
-        const url = 'http://localhost/dru_push/web/dru-chat/new-message'
+        const url = drupalSettings.dru_chat.new_msg_url
         xhr.open('POST', url, true)
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
         xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0")
@@ -92,37 +87,18 @@
         // TODO:: set up form csrf token
 
         xhr.onprogress = function () {
-          console.log(xhr.readyState) // === 3
+          //console.log(xhr.readyState) // === 3
         }
 
         xhr.onload = function () {
 
           if (this.status === 200) {
-            // 403: forbidden
-            // 404: Not found
-
-            //console.log(this.responseText)
-
-            //const users = JSON.parse(this.responseText)
-            /*var output = ''
-            output += '<ul>' +
-                '<li> ID: '
-                +
-                '</ul>'
-            console.log(this.responseText)
-            messages.innerHTML = this.responseText
-
-            // listener for message input
-            const message = document.querySelector('[type="input"], [name="message"]')
-            message.addEventListener('keyup', sendNewMessage) */
-            /*document.getElementById('msg').innerHTML =
-                this.responseText*/
             scrollMessageList()
           }
         }
 
         xhr.onerror = function () {
-          console.log('ERRor')
+          //console.log('ERRor')
         }
 
         xhr.send(params)
@@ -132,18 +108,30 @@
     function showChats() {
       receiver_id = this.id
       current_id = drupalSettings.dru_chat.current_id
+      // remove active class from prev if any
+      let prev_active = document.querySelector('.users .active')
+      if (prev_active) prev_active.classList.remove('active')
+
+      let messages_div_hidden = document.querySelector('#dru-chat-block #messages')
+      if (messages_div_hidden) messages_div_hidden.style.display = 'inline-block'
+
+      // toggle messages display: none
       //this.classList.remove('active')
+      // remove unread notification
+      let notifications = document.querySelector(`[id="${this.id}"]`)
+      if (notifications && notifications.querySelector('.pending')) {
+        notifications.querySelector('.pending').remove()
+      }
       this.classList.add('active')
 
       // OPEN - type, url/file, async
       // /dru-chat/messages/{user}
       //const url = 'https://api.github.com/users?name=mimi'
-      const url = 'http://localhost/dru_push/web/dru-chat/messages/' + receiver_id
+      const url = drupalSettings.dru_chat.msgs_url + receiver_id
 
       xhr.open('GET', url, true)
       xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0")
       //xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-      //var params = "name="+name;
       // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
 
       xhr.onprogress = function () {
@@ -156,27 +144,17 @@
         if (this.status === 200) {
           // 403: forbidden
           // 404: Not found
-
-          //const users = JSON.parse(this.responseText)
-          var output = ''
-          output += '<ul>' +
-              '<li> ID: '
-              +
-              '</ul>'
-          //console.log(this.responseText)
           messages.innerHTML = this.responseText
 
           // listener for message input
           const message = document.querySelector('[type="input"], [name="message"]')
           message.addEventListener('keyup', sendNewMessage)
           scrollMessageList()
-          /*document.getElementById('msg').innerHTML =
-              this.responseText*/
         }
       }
 
       xhr.onerror = function () {
-        console.log('ERRor')
+        //console.log('ERRor')
       }
 
       xhr.send()

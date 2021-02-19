@@ -5,6 +5,7 @@ namespace Drupal\dru_chat\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\dru_chat\Event\DruChatEvent;
 use Faker\Factory;
 use Faker\Generator;
 use Pusher\Pusher;
@@ -85,8 +86,16 @@ class Messages {
       'is_read' => FALSE
     ];
 
+    // message event
+    $event = new DruChatEvent($values);
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch(DruChatEvent::NEW_MESSAGE_EVENT, $event);
 
-    $entity->create($values)->save();
+
+    // TODO:: track sessions for guests and start there
+    if($from) {
+      $entity->create($values)->save();
+    }
 
     $config = $this->configFactory->getEditable('dru_chat.settings');
     $cluster = $config->get('cluster');
@@ -107,7 +116,7 @@ class Messages {
       $options
     );
 
-    $data['message'] = 'hello world';
+    //$data['message'] = 'hello world';
     $data = [
       'from' => $from,
       'to' => $to,

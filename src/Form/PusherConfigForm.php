@@ -6,6 +6,7 @@ namespace Drupal\dru_chat\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\dru_chat\Event\DruChatEvent;
 
 class PusherConfigForm extends ConfigFormBase {
 
@@ -74,14 +75,14 @@ class PusherConfigForm extends ConfigFormBase {
       '#maxlenght' => 40
     ];
 
-    $form['chat_settings'] = [
+    /*$form['chat_settings'] = [
       '#type' => 'select',
       '#title' => $this->t('Visitors Chat settings'),
       '#options' => ['yes' => 'Yes', 'no' => 'No'],
       '#description' => $this->t('Should un-logged in users use chat!?'),
       '#default_value' => $config->get('chat_settings'),
       '#required' => TRUE,
-    ];
+    ];*/
 
 
     return parent::buildForm($form, $form_state);

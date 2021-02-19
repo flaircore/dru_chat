@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\dru_chat\Service\Messages;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a 'DruChatBlock' block.
@@ -87,19 +88,20 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
     $app_id = $config->get('app_id');
     $secret = $config->get('secret');
     $auth_key = $config->get('auth_key');
-    /**
-     * ->set('app_id', $form_state->getValue('app_id'))
-    ->set('auth_key', $form_state->getValue('auth_key'))
-    ->set('secret', $form_state->getValue('secret'))
-    ->set('cluster', $form_state->getValue('cluster'))
-     */
 
     $token = \Drupal::csrfToken();
 
-    /*dump($cluster);
-    dump($app_id);
-    dump($secret, $auth_key);
-    */
+
+    $new_msg_url = Url::fromRoute('dru_chat.new_messages');
+    $new_msg_url_token = $token->get($new_msg_url->getInternalPath());
+    $new_msg_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $new_msg_url_token]]);
+    $new_msg_url = $new_msg_url->toString();
+
+    $msgs_url = Url::fromRoute('<front>');
+    //$msgs_url_token = $token->get($msgs_url->getInternalPath());
+    //$msgs_url->setOptions(['absolute' => TRUE, 'user' => NULL, 'query' => ['token' => $msgs_url_token]]);
+    $msgs_url->setOptions(['absolute' => TRUE]);
+    $msgs_url = $msgs_url->toString();
 
     // do better here... users online and such
     $users = \Drupal::entityTypeManager()->getStorage('user');
@@ -112,6 +114,10 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
 
     // get unread messages from user_ids
     $unread_messages = $this->messages->countUnread($user_ids, $user->id());
+    $total_unread = [];
+    foreach ($unread_messages as $unread_message) {
+      array_push($total_unread, $unread_message['message_count']);
+    }
 
     $users = $users->loadMultiple($user_ids);
 
@@ -120,6 +126,7 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
       '#cache' => ['max-age' => 0],
       '#data' => [
         'title' => 'Testing title',
+        'total_unread' => array_sum($total_unread),
         'pusher_cluster' => $cluster,
         'pusher_app_key' => $auth_key,
         'users' => $users,
@@ -135,6 +142,8 @@ class DruChatBlock extends BlockBase implements ContainerFactoryPluginInterface 
             'current_id' => $user->id(),
             'pusher_cluster' => $cluster,
             'pusher_app_key' => $auth_key,
+            'new_msg_url' => $new_msg_url,
+            'msgs_url' => $msgs_url . "dru-chat/messages/"
           ]
         ]
       ],

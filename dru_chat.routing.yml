@@ -4,7 +4,7 @@ dru_chat.pusher_settings:
     _form: '\Drupal\dru_chat\Form\PusherConfigForm'
     _title: 'Pusher Config form'
   requirements:
-    _permission: 'access content'
+    _permission: 'administer account settings'
 
 dru_chat.messages:
   path: '/dru-chat/messages/{user}'
@@ -26,5 +26,5 @@ dru_chat.new_messages:
     _controller: '\Drupal\dru_chat\Controller\MessagesController::newMessage'
     _title: 'New message'
   requirements:
-    #_csrf_token: 'TRUE'
+    _csrf_token: 'TRUE'
     _permission: 'access content'
