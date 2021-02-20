@@ -9,9 +9,11 @@ CONTENTS OF THIS FILE
 
 INTRODUCTION
 ------------
-This module provides a live chat block, and uses the pusher api.
-Project home page: https://www.drupal.org/project/dru_chat
-https://pusher.com/channels/pricing
+*This module provides a live real time chat functionality as a block.
+Project home page: 
+https://git.drupalcode.org/project/dru_chat
+https://www.drupal.org/project/dru_chat
+*Uses the pusher api.
 ![Chat View](/chat_thread.PNG)
 
 INSTALLATION
@@ -25,7 +27,7 @@ via composer by running `composer require pusher/pusher-php-server`, Then enable
 CONFIGURATION
 ------------
 After enabling the module, head to `<front>/admin/dru-chat/pusher-configs` and enter your Pusher
-app (Channel) details as provided here `https://dashboard.pusher.com/apps/` ie app_id, key, secret,
+app (Channel) details as provided here https://dashboard.pusher.com/apps/ ie app_id, key, secret,
 cluster.
 After this, place the dru chat block at the footer of your site.
 
