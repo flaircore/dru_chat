@@ -11,9 +11,13 @@ INTRODUCTION
 ------------
 *This module provides a live real time chat functionality as a block.
 Project home page: 
+
 https://git.drupalcode.org/project/dru_chat
+
 https://www.drupal.org/project/dru_chat
+
 *Uses the pusher api.
+
 ![Chat View](/chat_thread.PNG)
 
 INSTALLATION
@@ -31,5 +35,5 @@ app (Channel) details as provided here https://dashboard.pusher.com/apps/ ie app
 cluster.
 After this, place the dru chat block at the footer of your site.
 
-![User list View](/chat_user.PNG)
+![User list View](/chat_user_list.PNG)
 ![minimized](/un_read_msgs.PNG)
